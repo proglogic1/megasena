@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Combinador Mega-Sena</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 24px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        select, input[type="text"], button {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            padding: 10px;
+            margin-bottom: 5px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .highlight {
+            background-color: #ffd700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Gerador de Combinações - Mega-Sena</h1>
+        <form method="post">
+            {% csrf_token %}
+            <!-- Selecionar a quantidade de dezenas -->
+            <label for="quantidade">Quantidade de dezenas:</label>
+            <select name="quantidade" id="quantidade">
+                {% for i in intervalo_quantidades %}
+                <option value="{{ i }}" {% if quantidade == i %}selected{% endif %}>{{ i }}</option>
+                {% endfor %}
+            </select>
+
+            <!-- Informar as dezenas -->
+            <label for="dezenas">Digite as dezenas (separadas por vírgula):</label>
+            <input 
+                type="text" 
+                name="dezenas" 
+                id="dezenas" 
+                value="{{ dezenas }}" 
+                placeholder="Exemplo: 1,2,3,4,5,6,7,8,9,10"
+            >
+
+            <button type="submit">Gerar Combinações</button>
+        </form>
+
+        <!-- Mostrar combinações geradas -->
+        {% if combinacoes_resultado %}
+            <h2>Combinações Geradas:</h2>
+            <ul>
+                {% for combinacao in combinacoes_resultado %}
+                    <li 
+                        class="{% if combinacao in combinacoes_sorteadas %}highlight{% endif %}">
+                        {{ combinacao|join:", " }}
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+</body>
+</html>
